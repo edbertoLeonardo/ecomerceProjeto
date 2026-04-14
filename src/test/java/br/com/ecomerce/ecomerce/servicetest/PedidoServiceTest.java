@@ -48,7 +48,7 @@ class PedidoServiceTest {
 
 
     @Test
-    void deveInserirPedidoComSucesso() {
+    void inserirPedidoComSucesso() {
 
         Pedido pedido = new Pedido();
         Cliente cliente = new Cliente();

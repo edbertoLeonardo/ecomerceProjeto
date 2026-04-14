@@ -20,7 +20,7 @@ public class BoletoServiceTest {
     }
 
     @Test
-    void deveCalcularDataVencimentoParaSeteDiasDepois() {
+    void calcularDataVencimentoParaSeteDiasDepois() {
 
         PagamentoComBoleto pagto = new PagamentoComBoleto();
 
