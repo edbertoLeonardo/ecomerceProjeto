@@ -28,7 +28,6 @@ public class ClienteInsertValidator implements ConstraintValidator<ClienteInsert
     public boolean isValid(ClienteNewDto objDto, ConstraintValidatorContext context) {
         List<FieldMessage> list = new ArrayList<>();
 
-// inclua os testes aqui, inserindo erros na lista
 
         if (objDto.getTipo().equals(TipoCliente.PESSOAFISICA.getCodigo()) && !BR.isValidCPF(objDto.getCpfOuCnpj())) {
             list.add(new FieldMessage("cpfOuCnpj", "CPF inválido"));
