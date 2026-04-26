@@ -1,4 +1,4 @@
-package br.com.ecomerce.ecomerce.servicetest.validation;
+package br.com.ecomerce.ecomerce.serviceTest.validation;
 
 import br.com.ecomerce.ecomerce.dto.ClienteDto;
 import br.com.ecomerce.ecomerce.model.Cliente;

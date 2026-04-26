@@ -1,4 +1,4 @@
-package br.com.ecomerce.ecomerce.servicetest;
+package br.com.ecomerce.ecomerce.serviceTest;
 
 import br.com.ecomerce.ecomerce.dto.ClienteDto;
 import br.com.ecomerce.ecomerce.dto.ClienteNewDto;

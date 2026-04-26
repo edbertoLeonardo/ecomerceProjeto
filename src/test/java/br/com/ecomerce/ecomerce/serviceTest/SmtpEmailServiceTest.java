@@ -1,4 +1,4 @@
-package br.com.ecomerce.ecomerce.servicetest;
+package br.com.ecomerce.ecomerce.serviceTest;
 
 
 import static org.mockito.Mockito.*;
