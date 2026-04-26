@@ -1,8 +1,6 @@
 package br.com.ecomerce.ecomerce.controllers;
 
-import br.com.ecomerce.ecomerce.model.Categoria;
 import br.com.ecomerce.ecomerce.model.Pedido;
-import br.com.ecomerce.ecomerce.service.CategoriaService;
 import br.com.ecomerce.ecomerce.service.PedidoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

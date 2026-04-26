@@ -39,7 +39,7 @@ class ClienteControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    // -------------------- GET BY ID --------------------
+
 
     @Test
     void buscarClientePorId() throws Exception {
