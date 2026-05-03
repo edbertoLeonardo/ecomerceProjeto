@@ -37,11 +37,22 @@ public class Produto {
         this.preco = preco;
     }
 
+//    @JsonIgnore
+//    public List<Pedido> getPedidos(){
+//        List<Pedido> lista = new ArrayList<>();
+//        for(ItemPedido x : itensDoPedido){
+//            lista.addAll((Collection<? extends Pedido>) x.getPedido());
+//        }
+//        return lista;
+//    }
+
     @JsonIgnore
-    public List<Pedido> getPedidos(){
+    public List<Pedido> getPedidos() {
         List<Pedido> lista = new ArrayList<>();
-        for(ItemPedido x : itensDoPedido){
-            lista.addAll((Collection<? extends Pedido>) x.getPedido());
+        for (ItemPedido x : itensDoPedido) {
+            if (x.getPedido() != null) {
+                lista.add(x.getPedido());
+            }
         }
         return lista;
     }

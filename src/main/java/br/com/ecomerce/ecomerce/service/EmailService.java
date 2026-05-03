@@ -1,7 +1,6 @@
 package br.com.ecomerce.ecomerce.service;
 
 
-import br.com.ecomerce.ecomerce.model.Cliente;
 import br.com.ecomerce.ecomerce.model.Pedido;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.mail.SimpleMailMessage;

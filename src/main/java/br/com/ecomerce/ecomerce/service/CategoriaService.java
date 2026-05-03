@@ -4,7 +4,6 @@ import br.com.ecomerce.ecomerce.dto.CategoriaDto;
 import br.com.ecomerce.ecomerce.exception.DataIntegrityException;
 import br.com.ecomerce.ecomerce.exception.ObjectNotFoundException;
 import br.com.ecomerce.ecomerce.model.Categoria;
-import br.com.ecomerce.ecomerce.model.Cliente;
 import br.com.ecomerce.ecomerce.repositories.CategoriaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;

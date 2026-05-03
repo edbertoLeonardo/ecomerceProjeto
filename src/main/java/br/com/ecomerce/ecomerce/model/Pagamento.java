@@ -1,7 +1,6 @@
 package br.com.ecomerce.ecomerce.model;
 
 import br.com.ecomerce.ecomerce.model.enums.EstadoPagamento;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.persistence.*;

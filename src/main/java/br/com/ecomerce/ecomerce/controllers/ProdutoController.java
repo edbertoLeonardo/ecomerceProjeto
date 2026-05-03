@@ -1,7 +1,6 @@
 package br.com.ecomerce.ecomerce.controllers;
 
 import br.com.ecomerce.ecomerce.controllers.utils.URL;
-import br.com.ecomerce.ecomerce.dto.CategoriaDto;
 import br.com.ecomerce.ecomerce.dto.ProdutoDto;
 import br.com.ecomerce.ecomerce.model.Produto;
 import br.com.ecomerce.ecomerce.service.ProdutoService;
