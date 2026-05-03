@@ -17,7 +17,7 @@ public class TipoClienteTest {
     @Test
     void lancarExcecaoParaCodigoInvalido() {
         assertThrows(IllegalArgumentException.class, () -> {
-            TipoCliente.toEnum(3); 
+            TipoCliente.toEnum(3);
         });
     }
 }

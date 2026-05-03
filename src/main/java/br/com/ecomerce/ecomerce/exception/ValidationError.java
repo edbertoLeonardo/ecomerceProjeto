@@ -17,7 +17,7 @@ public class ValidationError  extends StandardError{
         return errors;
     }
 
-    public void addError(String fildeName, String message){
-        errors.add(new FieldMessage(fildeName, message));
+    public void addError(String fieldName, String message){
+        errors.add(new FieldMessage(fieldName, message));
     }
 }
