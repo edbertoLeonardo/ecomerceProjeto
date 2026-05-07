@@ -40,7 +40,7 @@ public class PedidoService {
     public Pedido findById(Integer id) {
         return pedidoRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("Pedido não encontrada com ID: " + id
-                        +   ", Tipo: " + Pedido.class.getName()));
+                        + ", Tipo: " + Pedido.class.getName()));
     }
 
 
@@ -64,37 +64,37 @@ public class PedidoService {
 //        }
 //        itemPedidoRepository.saveAll(pedido.getItensDoPedido());
 //        System.out.println(pedido);
-////emailService.sendOrderConfirmationEmail(pedido);
+
+    /// /emailService.sendOrderConfirmationEmail(pedido);
 //        return pedido;
 //    }
+    public Pedido insert(Pedido pedido) {
+        pedido.setId(null);
+        pedido.setInstante(new Date());
+        pedido.setCliente(clienteService.findById(pedido.getCliente().getId()));
+        pedido.getPagamento().setEstadoPagamento(EstadoPagamento.PENDENTE);
+        pedido.getPagamento().setPedido(pedido);
 
-public Pedido insert(Pedido pedido) {
-    pedido.setId(null);
-    pedido.setInstante(new Date());
-    pedido.setCliente(clienteService.findById(pedido.getCliente().getId()));
-    pedido.getPagamento().setEstadoPagamento(EstadoPagamento.PENDENTE);
-    pedido.getPagamento().setPedido(pedido);
+        if (pedido.getPagamento() instanceof PagamentoComBoleto pagto) {
+            boletoService.preencherPagamentoComBoleto(pagto, pedido.getInstante());
+        }
 
-    if (pedido.getPagamento() instanceof PagamentoComBoleto pagto) {
-        boletoService.preencherPagamentoComBoleto(pagto, pedido.getInstante());
+
+        for (ItemPedido ip : pedido.getItensDoPedido()) {
+            ip.setDesconto(0.0);
+            ip.setProduto(produtoService.findById(ip.getProduto().getId()));
+            ip.setPreco(ip.getProduto().getPreco());
+            ip.setPedido(pedido);
+        }
+
+
+        pedido = pedidoRepository.save(pedido);
+        pagamentoRepository.save(pedido.getPagamento());
+        itemPedidoRepository.saveAll(pedido.getItensDoPedido());
+
+        System.out.println(pedido);
+        emailService.sendOrderConfirmationHtmlEmail(pedido);
+        return pedido;
     }
-
-
-    for (ItemPedido ip : pedido.getItensDoPedido()) {
-        ip.setDesconto(0.0);
-        ip.setProduto(produtoService.findById(ip.getProduto().getId()));
-        ip.setPreco(ip.getProduto().getPreco());
-        ip.setPedido(pedido);
-    }
-
-
-    pedido = pedidoRepository.save(pedido);
-    pagamentoRepository.save(pedido.getPagamento());
-    itemPedidoRepository.saveAll(pedido.getItensDoPedido());
-
-    System.out.println(pedido);
-    emailService.sendOrderConfirmationHtmlEmail(pedido);
-    return pedido;
-}
 
 }

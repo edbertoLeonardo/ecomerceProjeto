@@ -1,10 +1,12 @@
 package br.com.ecomerce.ecomerce.model;
 
+import br.com.ecomerce.ecomerce.model.enums.Perfil;
 import br.com.ecomerce.ecomerce.model.enums.TipoCliente;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 public class Cliente {
@@ -18,6 +20,8 @@ public class Cliente {
     private String email;
     private String cpfOuCnpj;
     private Integer tipoCliente;
+    @JsonIgnore
+    private String senha;
 
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
@@ -27,11 +31,29 @@ public class Cliente {
     @CollectionTable(name = "TELEFONE")
     private Set<String> telefones = new HashSet<>();
 
+    @ElementCollection(fetch=FetchType.EAGER)
+    @CollectionTable(name="PERFIS")
+    private Set<Integer> perfis = new HashSet<>();
+
     @JsonIgnore
     @OneToMany(mappedBy = "cliente")
     private List<Pedido> pedidosList = new ArrayList<>();
 
-    public Cliente(){}
+
+    public Cliente() {
+        addPerfil(Perfil.CLIENTE);
+    }
+
+    public Cliente(Integer id, String nome, String email, String cpfOuCnpj, TipoCliente tipoCliente, String senha) {
+        this.id = id;
+        this.nome = nome;
+        this.email = email;
+        this.cpfOuCnpj = cpfOuCnpj;
+        this.tipoCliente = (tipoCliente == null ) ? null : tipoCliente.getCodigo();
+        this.senha = senha;
+        addPerfil(Perfil.CLIENTE);
+    }
+
 
     public Cliente(Integer id, String nome, String email, String cpfOuCnpj, TipoCliente tipoCliente) {
         this.id = id;
@@ -40,6 +62,7 @@ public class Cliente {
         this.cpfOuCnpj = cpfOuCnpj;
         this.tipoCliente = (tipoCliente == null ) ? null : tipoCliente.getCodigo();
     }
+
 
     public Integer getId() {
         return id;
@@ -105,6 +128,21 @@ public class Cliente {
         this.pedidosList = pedidosList;
     }
 
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public Set<Perfil> getPerfis() {
+        return perfis.stream().map(x -> Perfil.toEnum(x)).collect(Collectors.toSet());
+    }
+
+    public void addPerfil(Perfil perfil) {
+        perfis.add(perfil.getCod());
+    }
 
     @Override
     public boolean equals(Object o) {

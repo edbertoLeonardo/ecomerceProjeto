@@ -15,6 +15,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,28 +25,33 @@ import java.util.List;
 public class ClienteService {
 
 
-
     @Autowired
     private ClienteRepository clienteRepository;
 
     @Autowired
     private CidadeRepository cidadeRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public Cliente findById(Integer id) {
         return clienteRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("Cliente não encontrada com ID: " + id
-                        +   ", Tipo: " + Cliente.class.getName()));
+                        + ", Tipo: " + Cliente.class.getName()));
     }
 
 
-    public Cliente update(Cliente cliente){
-       Cliente newCliente =  findById(cliente.getId());
+    public Cliente update(Cliente cliente) {
+        Cliente newCliente = findById(cliente.getId());
         updateData(newCliente, cliente);
         return clienteRepository.save(newCliente);
     }
 
-    public Cliente insert(Cliente cliente){
+    public Cliente insert(Cliente cliente) {
         cliente.setId(null);
+        cliente.setSenha(passwordEncoder.encode(cliente.getSenha()));
+       // cliente.setRole("ROLE_USER");
+
         return clienteRepository.save(cliente);
     }
 
@@ -54,40 +60,65 @@ public class ClienteService {
         newCliente.setEmail(cliente.getEmail());
     }
 
-    public void delete(Integer id){
-       findById(id);
+    public void delete(Integer id) {
+        findById(id);
         try {
             clienteRepository.deleteById(id);
-        }catch (DataIntegrityViolationException e){
+        } catch (DataIntegrityViolationException e) {
             throw new DataIntegrityException("Não é possível excluir um cliente com peididos");
         }
     }
 
-    public List<Cliente> findAll(){
+    public List<Cliente> findAll() {
         return clienteRepository.findAll();
     }
 
-    public Page<Cliente> findPage(Integer page, Integer linesPerPage, String orderBy, String direction){
+    public Page<Cliente> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
         PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
         return clienteRepository.findAll(pageRequest);
     }
 
-    public Cliente fromDto(ClienteDto clienteDto){
-        return new  Cliente(clienteDto.getId(), clienteDto.getNome(), clienteDto.getEmail(), null, null);
+    public Cliente fromDto(ClienteDto clienteDto) {
+        return new Cliente(clienteDto.getId(), clienteDto.getNome(), clienteDto.getEmail(), null, null, null);
     }
 
     public Cliente fromDTO(ClienteNewDto clienteNewDto) {
-        Cliente cliente = new Cliente(null, clienteNewDto.getNome(), clienteNewDto.getEmail(), clienteNewDto.getCpfOuCnpj(), TipoCliente.toEnum(clienteNewDto.getTipo()));
+
+        Cliente cliente = new Cliente(
+                null,
+                clienteNewDto.getNome(),
+                clienteNewDto.getEmail(),
+                clienteNewDto.getCpfOuCnpj(),
+                TipoCliente.toEnum(clienteNewDto.getTipo()),
+                passwordEncoder.encode(clienteNewDto.getSenha()));
+
+
         Cidade cidade = cidadeRepository.getReferenceById(clienteNewDto.getCidadeId());
-        Endereco endereco = new Endereco(null, clienteNewDto.getLogradouro(), clienteNewDto.getNumero(), clienteNewDto.getComplemento(), clienteNewDto.getBairro(), clienteNewDto.getCep(), cliente, cidade);
+
+        Endereco endereco = new Endereco(
+                null,
+                clienteNewDto.getLogradouro(),
+                clienteNewDto.getNumero(),
+                clienteNewDto.getComplemento(),
+                clienteNewDto.getBairro(),
+                clienteNewDto.getCep(),
+                cliente,
+                cidade
+        );
+
         cliente.getEnderecosList().add(endereco);
+
         cliente.getTelefones().add(clienteNewDto.getTelefone());
-        if (clienteNewDto.getTelefone2()!=null) {
+
+        if (clienteNewDto.getTelefone2() != null) {
             cliente.getTelefones().add(clienteNewDto.getTelefone2());
         }
-        if (clienteNewDto.getTelefone3()!=null) {
+
+        if (clienteNewDto.getTelefone3() != null) {
             cliente.getTelefones().add(clienteNewDto.getTelefone3());
         }
+
         return cliente;
     }
+
 }
