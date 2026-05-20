@@ -130,6 +130,10 @@ Será implementado um sistema de autenticação utilizando JSON Web Token (JWT):
 
 ---
 
+## 📺 Demonstração do Funcionamento
+
+[![Assistir no Google Drive](https://img.shields.io/badge/Google%20Drive-Assistir%20Vídeo-blue?logo=googledrive&logoColor=white&style=for-the-badge)](https://drive.google.com/drive/folders/1RYnn_H5v_Fc24cbWcyO7C7_9ub0xJPpe?usp=sharing)
+
 ## 👨‍💻 Autor
 
 * Edberto Leonardo
