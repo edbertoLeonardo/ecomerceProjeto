@@ -96,7 +96,7 @@ public class DBService {
         estadoRepository.saveAll(Arrays.asList(estado, estado2));
         cidadeRepository.saveAll(Arrays.asList(cidade, cidade2, cidade3));
 
-        Cliente cliente = new Cliente(null, "Maria Silva", "edbleonardo@gmail.com", "123456789", TipoCliente.PESSOAFISICA, passwordEncoder.encode("321"));
+        Cliente cliente = new Cliente(null, "Maria Silva", "edbleonardo@gmail.com", "123456789", TipoCliente.PESSOAFISICA, passwordEncoder.encode("123"));
         cliente.getTelefones().addAll(Arrays.asList("11122233", "22233344"));
 
         Cliente clienteDeTestPerfil = new Cliente(null, "Ana Silva", "ana@gmail.com", "0555588888", TipoCliente.PESSOAFISICA, passwordEncoder.encode("123"));
@@ -140,6 +140,6 @@ public class DBService {
         p3.getItensDoPedido().addAll(Arrays.asList(itemPedido2));
 
         itemPedidoRepository.saveAll(Arrays.asList(itemPedido, itemPedido2, itemPedido3));
-
+        System.out.println("========DADOS INSERIDOS COM SUCESSO!=====");
     }
 }

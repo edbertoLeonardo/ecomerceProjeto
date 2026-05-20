@@ -1,4 +1,4 @@
-package br.com.ecomerce.ecomerce.config;
+package br.com.ecomerce.ecomerce.configTest;
 
 import br.com.ecomerce.ecomerce.service.DBService;
 import br.com.ecomerce.ecomerce.service.EmailService;

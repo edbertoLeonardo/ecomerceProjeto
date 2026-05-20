@@ -36,7 +36,7 @@ public class UserDetailsServiceSecurity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return authorities;
     }
 
     @Override
@@ -47,5 +47,9 @@ public class UserDetailsServiceSecurity implements UserDetails {
     @Override
     public String getUsername() {
         return email;
+    }
+
+    public boolean hasRole(Perfil perfil) {
+        return getAuthorities().contains(new SimpleGrantedAuthority(perfil.getDescricao()));
     }
 }

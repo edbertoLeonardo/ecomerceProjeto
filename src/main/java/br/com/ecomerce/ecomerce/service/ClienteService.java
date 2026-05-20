@@ -1,12 +1,15 @@
 package br.com.ecomerce.ecomerce.service;
 
+import br.com.ecomerce.ecomerce.config.security.UserDetailsServiceSecurity;
 import br.com.ecomerce.ecomerce.dto.ClienteDto;
 import br.com.ecomerce.ecomerce.dto.ClienteNewDto;
+import br.com.ecomerce.ecomerce.exception.AuthorizationException;
 import br.com.ecomerce.ecomerce.exception.DataIntegrityException;
 import br.com.ecomerce.ecomerce.exception.ObjectNotFoundException;
 import br.com.ecomerce.ecomerce.model.Cidade;
 import br.com.ecomerce.ecomerce.model.Cliente;
 import br.com.ecomerce.ecomerce.model.Endereco;
+import br.com.ecomerce.ecomerce.model.enums.Perfil;
 import br.com.ecomerce.ecomerce.model.enums.TipoCliente;
 import br.com.ecomerce.ecomerce.repositories.CidadeRepository;
 import br.com.ecomerce.ecomerce.repositories.ClienteRepository;
@@ -35,6 +38,11 @@ public class ClienteService {
     private PasswordEncoder passwordEncoder;
 
     public Cliente findById(Integer id) {
+        UserDetailsServiceSecurity user = UserService.authenticated();
+        if (user == null || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())){
+            throw new AuthorizationException("Acesso negado");
+        }
+
         return clienteRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("Cliente não encontrada com ID: " + id
                         + ", Tipo: " + Cliente.class.getName()));

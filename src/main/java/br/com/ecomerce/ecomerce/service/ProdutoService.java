@@ -29,9 +29,35 @@ public class ProdutoService {
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Produto.class.getName()));
 	}
 
-    public Page<Produto> search(String nome, List<Integer> ids, Integer page, Integer linesPerPage, String orderBy, String direction) {
-        PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
-        List<Categoria> categorias = categoriaRepository.findAllById(ids);
-        return produtoRepository.findDistinctByNomeContainingAndCategoriasIn(nome, categorias, pageRequest);
-    }
+//    public Page<Produto> search(String nome, List<Integer> ids, Integer page, Integer linesPerPage, String orderBy, String direction) {
+//        PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+//        List<Categoria> categorias = categoriaRepository.findAllById(ids);
+//        return produtoRepository.findDistinctByNomeContainingAndCategoriasIn(nome, categorias, pageRequest);
+//    }
+
+	public Page<Produto> search(String nome, List<Integer> ids,
+	                            Integer page, Integer linesPerPage,
+	                            String orderBy, String direction) {
+
+		PageRequest pageRequest = PageRequest.of(
+				page,
+				linesPerPage,
+				Direction.valueOf(direction),
+				orderBy
+		);
+
+		// se não tiver categorias
+		if (ids.isEmpty()) {
+			return produtoRepository.findByNomeContaining(nome, pageRequest);
+		}
+
+		List<Categoria> categorias = categoriaRepository.findAllById(ids);
+
+		return produtoRepository
+				.findDistinctByNomeContainingAndCategoriasIn(
+						nome,
+						categorias,
+						pageRequest
+				);
+	}
 }

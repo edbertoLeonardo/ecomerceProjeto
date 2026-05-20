@@ -1,6 +1,9 @@
 package br.com.ecomerce.ecomerce.service;
 
+import br.com.ecomerce.ecomerce.config.security.UserDetailsServiceSecurity;
+import br.com.ecomerce.ecomerce.exception.AuthorizationException;
 import br.com.ecomerce.ecomerce.exception.ObjectNotFoundException;
+import br.com.ecomerce.ecomerce.model.Cliente;
 import br.com.ecomerce.ecomerce.model.ItemPedido;
 import br.com.ecomerce.ecomerce.model.PagamentoComBoleto;
 import br.com.ecomerce.ecomerce.model.Pedido;
@@ -9,6 +12,9 @@ import br.com.ecomerce.ecomerce.repositories.ItemPedidoRepository;
 import br.com.ecomerce.ecomerce.repositories.PagamentoRepository;
 import br.com.ecomerce.ecomerce.repositories.PedidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.ScrollPosition;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -95,6 +101,16 @@ public class PedidoService {
         System.out.println(pedido);
         emailService.sendOrderConfirmationHtmlEmail(pedido);
         return pedido;
+    }
+
+    public Page<Pedido> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
+        UserDetailsServiceSecurity user = UserService.authenticated();
+        if (user == null) {
+            throw new AuthorizationException("Acesso negado");
+        }
+        PageRequest pageRequest = PageRequest.of(page, linesPerPage);
+        Cliente cliente =  clienteService.findById(user.getId());
+        return pedidoRepository.findByCliente(cliente, pageRequest);
     }
 
 }

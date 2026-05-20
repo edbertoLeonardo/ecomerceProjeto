@@ -10,6 +10,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
@@ -17,10 +19,12 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.Arrays;
 
 @Configuration
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     @Autowired
@@ -39,6 +43,10 @@ public class SecurityConfig {
     private static final String[] PUBLIC_MATCHERS_GET = {
             "/produtos/**",
             "/categorias/**",
+
+    };
+
+    private static final String[] PUBLIC_MATCHERS_POST = {
             "/clientes/**"
     };
 
@@ -46,7 +54,7 @@ public class SecurityConfig {
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 
-        authProvider.setUserDetailsService(userDetailsService); // Certifique-se de que ele não está nulo
+        authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(bCryptPasswordEncoder());
 
         return authProvider;
@@ -71,6 +79,13 @@ public class SecurityConfig {
                         objectMapper
                 );
 
+        JWTAuthorizationFilter authorizationFilter =
+                new JWTAuthorizationFilter(
+                        authenticationManager,
+                        jwtUtil,
+                        userDetailsService
+                );
+
         http
 
                 .cors(cors -> {})
@@ -89,11 +104,17 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET)
                         .permitAll()
 
+                        .requestMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST)
+                        .permitAll()
+
                         .anyRequest()
                         .authenticated()
                 )
 
                 .addFilter(authenticationFilter);
+                http.addFilter(authorizationFilter
+                );
+
 
         return http.build();
     }

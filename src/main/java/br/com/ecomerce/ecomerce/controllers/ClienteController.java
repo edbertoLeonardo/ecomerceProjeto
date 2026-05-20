@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -29,6 +30,7 @@ public class ClienteController {
         return ResponseEntity.ok().body(obj);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @RequestMapping(method=RequestMethod.POST)
     public ResponseEntity<Void> insert(@Valid @RequestBody ClienteNewDto clienteNewDto) {
         Cliente cliente = clienteService.fromDTO(clienteNewDto);
@@ -46,6 +48,7 @@ public class ClienteController {
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         clienteService.delete(id);
@@ -53,6 +56,7 @@ public class ClienteController {
 
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<ClienteDto>> findAll() {
         List<Cliente> clientes = clienteService.findAll();
@@ -60,6 +64,7 @@ public class ClienteController {
         return ResponseEntity.ok().body(categoriasDtos);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping(value = "/page")
     public ResponseEntity<Page<ClienteDto>> findPage(
             @RequestParam(value = "page", defaultValue = "0") Integer page,

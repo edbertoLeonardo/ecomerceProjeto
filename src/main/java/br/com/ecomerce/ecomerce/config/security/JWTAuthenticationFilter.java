@@ -66,10 +66,10 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request,
-                                            HttpServletResponse response,
-                                            FilterChain chain,
-                                            Authentication authentication)
+    public void successfulAuthentication(HttpServletRequest request,
+                                         HttpServletResponse response,
+                                         FilterChain chain,
+                                         Authentication authentication)
             throws IOException, ServletException {
 
         UserDetails user = (UserDetails) authentication.getPrincipal();
@@ -95,9 +95,9 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request,
-                                              HttpServletResponse response,
-                                              AuthenticationException failed)
+    public void unsuccessfulAuthentication(HttpServletRequest request,
+                                           HttpServletResponse response,
+                                           AuthenticationException failed)
             throws IOException, ServletException {
 
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
